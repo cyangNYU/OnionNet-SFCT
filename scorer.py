@@ -259,7 +259,7 @@ def rescoring(receptor_file, ligand_file, output, model_pkl, method='rabind-rf',
 def extract_pose_scores(ligand_file, pose_scores_type="general"):
     if pose_scores_type == "general":
         return [0.0, ] * 1000
-    elif pose_scores_type in ["idock", "ledock", 'gnina', 'tdock', 'vina', 'gnina_energy', 'gnina_cnn']:
+    elif pose_scores_type in ["idock", "ledock", 'gnina', 'tdock', 'vina', 'gnina_energy', 'gnina_cnn', 'smina']:
         scores = None
         with open(ligand_file) as lines:
             if pose_scores_type == "idock":
@@ -277,6 +277,8 @@ def extract_pose_scores(ligand_file, pose_scores_type="general"):
                 scores = [float(x.split()[-2]) for x in lines if "REMARK VINA ENERGY" in x]
             elif pose_scores_type.lower() == "vina":
                 scores = [float(x.split()[-3]) for x in lines if "REMARK VINA RESULT:" in x]
+            elif pose_scores_type == 'smina':
+                scores = [float(x.split()[2]) for x in lines if "REMARK minimizedAffinity" in x]
             else:
                 scores = [0.0, ] * 1000
 
